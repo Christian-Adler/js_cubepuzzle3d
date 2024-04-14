@@ -92,8 +92,11 @@ class Cube {
   }
 
   draw(scene) {
+    let c = 0;
+    const drawSolidUpTo = this.cubeParts.length / 3;
     for (const cubePart of this.cubeParts) {
-      cubePart.draw(scene);
+      c++;
+      cubePart.draw(scene, c <= drawSolidUpTo);
     }
   }
 }

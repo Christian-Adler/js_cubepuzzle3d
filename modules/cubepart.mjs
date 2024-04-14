@@ -15,17 +15,21 @@ class CubePart {
     }
   }
 
-  getThree() {
+  getThree(solid) {
     const dimension = 0.9;
     const geometry = new THREE.BoxGeometry(dimension, dimension, dimension);
 // const material = new THREE.MeshBasicMaterial({color: 0x049ef4, wireframe: false, fog: true});
 // const material = new THREE.MeshStandardMaterial({color: 0x049ef4, wireframe: false, fog: true});
-    const material = new THREE.MeshBasicMaterial({color: this.color, wireframe: true, transparent: true, opacity: 0.5})
+    const material = new THREE.MeshBasicMaterial({
+      color: this.color,
+      wireframe: !solid,
+      transparent: true,
+      opacity: 0.5
+    })
 // const material = new THREE.MeshNormalMaterial({wireframe: true});
 
     const threeCubes = [];
     for (const point of this.points) {
-
       const cube = new THREE.Mesh(geometry, material);
       cube.position.x = point.x;
       cube.position.y = point.y;
@@ -118,8 +122,8 @@ class CubePart {
     return `{${this.points}}`;
   }
 
-  draw(scene) {
-    for (const threeCube of this.getThree()) {
+  draw(scene, drawSolid) {
+    for (const threeCube of this.getThree(drawSolid)) {
       scene.add(threeCube);
     }
   }
