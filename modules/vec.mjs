@@ -82,14 +82,25 @@ class Vec {
     return env;
   }
 
+  length() {
+    return this.x + this.y + this.z;
+  }
+
   compareTo(other) {
-    if (this.x !== other.x)
-      return this.x - other.x;
-    if (this.y !== other.y)
-      return this.y - other.y;
-    if (this.z !== other.z)
-      return this.z - other.z;
-    return 0;
+    let compareVal = this.length() - other.length();
+    if (compareVal !== 0)
+      return compareVal;
+
+    compareVal = this.x - other.x;
+    if (compareVal !== 0)
+      return compareVal;
+    
+    compareVal = this.y - other.y;
+    if (compareVal !== 0)
+      return compareVal;
+
+    compareVal = this.z - other.z;
+    return compareVal;
   }
 
   toString() {
