@@ -24,6 +24,17 @@ class Vec {
     return this.clone().add(other);
   }
 
+  sub(other) {
+    this.x -= other.x;
+    this.y -= other.y;
+    this.z -= other.z;
+    return this;
+  }
+
+  subToNew(other) {
+    return this.clone().sub(other);
+  }
+
   mult(val) {
     this.x *= val;
     this.y *= val;
@@ -39,6 +50,18 @@ class Vec {
     return this.x >= min && this.x <= max
         && this.y >= min && this.y <= max
         && this.z >= min && this.z <= max;
+  }
+
+  isCorner(min, max) {
+    return (this.x === min || this.x === max)
+        && (this.y === min || this.y === max)
+        && (this.z === min || this.z === max);
+  }
+
+  isOnEdge(min, max) {
+    return ((this.x === min || this.x === max) && (this.y === min || this.y === max)) ||
+        ((this.x === min || this.x === max) && (this.z === min || this.z === max)) ||
+        ((this.z === min || this.z === max) && (this.y === min || this.y === max));
   }
 
   invert() {
