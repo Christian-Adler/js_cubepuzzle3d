@@ -40,8 +40,6 @@ function calcNextStep() {
     for (const cubePart of cps) {
       const clonedCube = cube.clone();
       if (clonedCube.tryAddCubePart(cubePart)) {
-        cubePart.initThree();
-
         if (clonedCube.isFilled()) {
           out("Found solution");
           solutions.push(clonedCube);

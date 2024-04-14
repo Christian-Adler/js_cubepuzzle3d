@@ -3,21 +3,17 @@ import {randColor} from "./util.mjs";
 import * as THREE from "./three.module.js";
 
 class CubePart {
-  constructor(points, color, initThree) {
+  constructor(points, color) {
     this.points = points;
     this.pointSet = new Set();
-    this.threeCubes = [];
     this.color = color || randColor();
 
     for (const point of points) {
       this.pointSet.add(point.toString());
     }
-
-    if (initThree)
-      this.initThree()
   }
 
-  initThree() {
+  getThree() {
     const dimension = 0.9;
     const geometry = new THREE.BoxGeometry(dimension, dimension, dimension);
 // const material = new THREE.MeshBasicMaterial({color: 0x049ef4, wireframe: false, fog: true});
@@ -25,14 +21,16 @@ class CubePart {
     const material = new THREE.MeshBasicMaterial({color: this.color, wireframe: true, transparent: true, opacity: 0.5})
 // const material = new THREE.MeshNormalMaterial({wireframe: true});
 
+    const threeCubes = [];
     for (const point of this.points) {
 
       const cube = new THREE.Mesh(geometry, material);
       cube.position.x = point.x;
       cube.position.y = point.y;
       cube.position.z = point.z;
-      this.threeCubes.push(cube);
+      threeCubes.push(cube);
     }
+    return threeCubes;
   }
 
   static ofNormVecs(mainDir, secondDir) {
@@ -72,9 +70,8 @@ class CubePart {
     for (const point of this.points) {
       points.push(point.clone());
     }
-    const initThree = this.threeCubes.length > 0;
 
-    return new CubePart(points, this.color, initThree);
+    return new CubePart(points, this.color);
   }
 
   move(vec) {
@@ -128,7 +125,7 @@ class CubePart {
   }
 
   draw(scene) {
-    for (const threeCube of this.threeCubes) {
+    for (const threeCube of this.getThree()) {
       scene.add(threeCube);
     }
   }
