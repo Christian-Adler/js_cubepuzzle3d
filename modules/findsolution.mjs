@@ -16,8 +16,7 @@ function calcNextStep() {
   count++;
   const cube = workList.pop();
   if (count % 1000 === 0) {
-    out(count);
-    out(workList.length);
+    out(`count: ${count}, worklist: ${workList.length}, hashes: ${alreadyVisited.size}`);
   }
   actDrawCube = cube;
 
@@ -35,6 +34,29 @@ function calcNextStep() {
   // shuffle
   // shuffle(checkPoints);
 
+
+  // find holes
+  for (const envVec of checkPoints) {
+    const pointEnvelope = envVec.envelope().filter(v => v.containedIn(Cube.min, Cube.max) && cube.isFreeVec(v));
+    if (pointEnvelope.length === 0) {
+      // out("found hole!");
+      return;
+    }
+    // Edgecase Ecke
+    if (pointEnvelope.length === 1 && envVec.isOnEdge(Cube.min, Cube.max)) {
+      // out("found edge in envelope!");
+      const normVec = pointEnvelope[0].subToNew(envVec);
+      // out(normVec.toString());
+      if (!cube.isFreeVec(envVec.addToNew(normVec.multToNew(2))) || !cube.isFreeVec(envVec.addToNew(normVec.multToNew(3)))) {
+        // out("found edge with to less space!");
+        return;
+      }
+    }
+  }
+
+
+  let firstAdd = true;
+
   for (const checkPoint of checkPoints) {
     const cps = CubePart.createCubePartsAt(checkPoint).filter(cp => Cube.containedInCubeCubePart(cp));
     for (const cubePart of cps) {
@@ -44,6 +66,9 @@ function calcNextStep() {
           out("Found solution");
           solutions.push(clonedCube);
           workList = [];
+          alreadyVisited.clear();
+          out("return");
+          return;
         } else {
           let hash = clonedCube.hash();
           if (!alreadyVisited.has(hash)) {
