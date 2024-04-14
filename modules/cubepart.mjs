@@ -15,7 +15,7 @@ class CubePart {
     }
   }
 
-  getThree(solid) {
+  getThree(solid, striking) {
     const dimension = 0.9;
     const geometry = new THREE.BoxGeometry(dimension, dimension, dimension);
 // const material = new THREE.MeshBasicMaterial({color: 0x049ef4, wireframe: false, fog: true});
@@ -24,7 +24,7 @@ class CubePart {
       color: this.color,
       wireframe: !solid,
       transparent: true,
-      opacity: 0.5
+      opacity: striking ? 0.8 : 0.5
     })
 // const material = new THREE.MeshNormalMaterial({wireframe: true});
 
@@ -39,14 +39,17 @@ class CubePart {
     return threeCubes;
   }
 
-  static ofNormVecs(mainDir, secondDir) {
+  static ofNormVecs(mainDir, secondDir, near) {
     const points = [
       Vec.nullVec(),
       Vec.nullVec().addToNew(mainDir),
       Vec.nullVec().addToNew(mainDir.multToNew(2)),
-      Vec.nullVec().addToNew(mainDir.multToNew(3)),
-      Vec.nullVec().addToNew(mainDir).addToNew(secondDir),
+      Vec.nullVec().addToNew(mainDir.multToNew(3))
     ];
+    if (near)
+      points.push(Vec.nullVec().addToNew(mainDir).addToNew(secondDir));
+    else
+      points.push(Vec.nullVec().addToNew(mainDir.multToNew(2)).addToNew(secondDir));
 
     return new CubePart(points);
   }
@@ -56,9 +59,13 @@ class CubePart {
 
     function buildParts(v1, v2) {
       cubeParts.push(CubePart.ofNormVecs(v1.clone(), v2.clone()).move(vec));
+      cubeParts.push(CubePart.ofNormVecs(v1.clone(), v2.clone(), true).move(vec));
       cubeParts.push(CubePart.ofNormVecs(v1.clone(), v2.clone().invert()).move(vec));
+      cubeParts.push(CubePart.ofNormVecs(v1.clone(), v2.clone().invert(), true).move(vec));
       cubeParts.push(CubePart.ofNormVecs(v1.clone().invert(), v2.clone()).move(vec));
+      cubeParts.push(CubePart.ofNormVecs(v1.clone().invert(), v2.clone(), true).move(vec));
       cubeParts.push(CubePart.ofNormVecs(v1.clone().invert(), v2.clone().invert()).move(vec));
+      cubeParts.push(CubePart.ofNormVecs(v1.clone().invert(), v2.clone().invert(), true).move(vec));
     }
 
     buildParts(Vec.normX(), Vec.normY());
@@ -122,8 +129,8 @@ class CubePart {
     return `{${this.points}}`;
   }
 
-  draw(scene, drawSolid) {
-    for (const threeCube of this.getThree(drawSolid)) {
+  draw(scene, drawSolid, drawStriking) {
+    for (const threeCube of this.getThree(drawSolid, drawStriking)) {
       scene.add(threeCube);
     }
   }
