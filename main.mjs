@@ -1,4 +1,4 @@
-import {findSolution} from "./modules/findsolution.mjs";
+import {drawActNode, findSolution} from "./modules/findsolution.mjs";
 
 import * as THREE from './modules/three.module.js';
 
@@ -58,9 +58,11 @@ function animate() {
   // requestAnimationFrame(animate);
   scene.clear();
 
-  findSolution(scene, doSingleStep);
+  findSolution(doSingleStep);
   if (typeof doSingleStep === "boolean")
     doSingleStep = false;
+
+  drawActNode(scene);
 
   // Move Camera
   angle += angleDelta;

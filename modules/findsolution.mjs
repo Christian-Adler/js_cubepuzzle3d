@@ -12,54 +12,69 @@ let count = 0;
 let workList = [startCube];
 let actDrawCube = null;
 
-const findSolution = (scene, doSingleStep) => {
+function calcNextStep() {
+  count++;
+  const cube = workList.pop();
+  if (count % 1000 === 0) {
+    out(count);
+    out(workList.length);
+  }
+  actDrawCube = cube;
 
-  if (solutions.length === 0 && workList.length !== 0 && (typeof doSingleStep !== "boolean" || doSingleStep)) {
-    count++;
-    const cube = workList.pop();
-    if (count % 1000 === 0) {
-      out(count);
-      out(workList.length);
-    }
-    actDrawCube = cube;
+  let checkPoints;
+  if (cube.isEmpty())
+    checkPoints = [Vec.nullVec()];
+  else
+    checkPoints = [...cube.envelope()];
 
-    let checkPoints;
-    if (cube.isEmpty())
-      checkPoints = [Vec.nullVec()];
-    else
-      checkPoints = [...cube.envelope()];
+  // sort points?
+  // checkPoints.sort(function (a, b) {
+  //   return a.compareTo(b);
+  // });
 
-    for (const checkPoint of checkPoints) {
-      const cps = CubePart.createCubePartsAt(checkPoint).filter(cp => Cube.containedInCubeCubePart(cp));
-      for (const cubePart of cps) {
-        const clonedCube = cube.clone();
-        if (clonedCube.tryAddCubePart(cubePart)) {
-          cubePart.initThree();
+  // shuffle
+  // shuffle(checkPoints);
 
-          if (clonedCube.isFilled()) {
-            out("Found solution");
-            solutions.push(clonedCube);
-            workList = [];
-          } else {
-            let hash = clonedCube.hash();
-            if (!alreadyVisited.has(hash)) {
-              alreadyVisited.add(hash);
-              // workList.unshift(clonedCube); // too much memory
-              workList.push(clonedCube);
-            } else
-              out("Hash already in list");
-          }
+  for (const checkPoint of checkPoints) {
+    const cps = CubePart.createCubePartsAt(checkPoint).filter(cp => Cube.containedInCubeCubePart(cp));
+    for (const cubePart of cps) {
+      const clonedCube = cube.clone();
+      if (clonedCube.tryAddCubePart(cubePart)) {
+        cubePart.initThree();
+
+        if (clonedCube.isFilled()) {
+          out("Found solution");
+          solutions.push(clonedCube);
+          workList = [];
+        } else {
+          let hash = clonedCube.hash();
+          if (!alreadyVisited.has(hash)) {
+            alreadyVisited.add(hash);
+            // workList.unshift(clonedCube); // too much memory
+            workList.push(clonedCube);
+          } else
+            out("Hash already in list");
         }
       }
     }
+  }
+}
+
+const findSolution = (doSingleStep) => {
+
+  if (solutions.length === 0 && workList.length !== 0 && (typeof doSingleStep !== "boolean" || doSingleStep)) {
+    calcNextStep();
   }
 
   if (solutions.length > 0) {
     // out(solutions);
     actDrawCube = solutions[0];
   }
+};
 
+const drawActNode = (scene) => {
   if (actDrawCube)
     actDrawCube.draw(scene);
-};
-export {findSolution};
+}
+
+export {findSolution, drawActNode};

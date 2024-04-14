@@ -59,6 +59,16 @@ class Vec {
     return env;
   }
 
+  compareTo(other) {
+    if (this.x !== other.x)
+      return this.x - other.x;
+    if (this.y !== other.y)
+      return this.y - other.y;
+    if (this.z !== other.z)
+      return this.z - other.z;
+    return 0;
+  }
+
   toString() {
     return `[${this.x},${this.y},${this.z}]`;
   }
