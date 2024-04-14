@@ -1,8 +1,10 @@
 import {areSetsEqual} from "./util.mjs";
+import {CubePart} from "./cubepart.mjs";
 
 class Cube {
   static min = 0;
   static max = 4;
+  static filledPartsNum = Math.pow((Cube.max + 1 - Cube.min), 3) / CubePart.CUBE_PART_SIZE;
 
   constructor({cubeParts = []}) {
     this.cubeParts = cubeParts;
@@ -44,20 +46,17 @@ class Cube {
   }
 
   envelope() {
+    const tmpSet = new Set();
     let env = [];
     for (const cubePart of this.cubeParts) {
-      env = env.concat(cubePart.envelope());
-    }
-
-    // remove duplicates
-    const tmp = [...env];
-    env = [];
-    const tmpSet = new Set();
-    for (const vec of tmp) {
-      let hash = vec.toString();
-      if (!tmpSet.has(hash)) {
-        tmpSet.add(hash);
-        env.push(vec);
+      const tmp = cubePart.envelope();
+      // remove duplicates
+      for (const vec of tmp) {
+        const hash = vec.toString();
+        if (!tmpSet.has(hash)) {
+          tmpSet.add(hash);
+          env.push(vec);
+        }
       }
     }
 
@@ -71,7 +70,7 @@ class Cube {
 
 
   isFilled() {
-    return this.cubeParts.length === 25;
+    return this.cubeParts.length === Cube.filledPartsNum;
   }
 
   isEmpty() {

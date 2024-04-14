@@ -3,6 +3,8 @@ import {randColor} from "./util.mjs";
 import * as THREE from "./three.module.js";
 
 class CubePart {
+  static CUBE_PART_SIZE = 5;
+
   constructor(points, color) {
     this.points = points;
     this.pointSet = new Set();
@@ -85,14 +87,6 @@ class CubePart {
 
   containsVec(point) {
     return this.pointSet.has(point.toString());
-  }
-
-  intersects(otherCubePart) {
-    for (const point of this.points) {
-      if (otherCubePart.containsVec(point))
-        return true;
-    }
-    return false;
   }
 
   containedIn(min, max) {
