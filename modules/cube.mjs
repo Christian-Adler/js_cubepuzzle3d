@@ -11,7 +11,7 @@ class Cube {
     this.pointSet = new Set();
     for (const cubePart of cubeParts) {
       cubePart.pointSet.forEach((point) => {
-        this.pointSet.add(point.toString());
+        this.pointSet.add(point);
       });
     }
   }
@@ -24,8 +24,19 @@ class Cube {
     return new Cube({cubeParts});
   }
 
+  getPrevCube() {
+    const cubeParts = [];
+    // copy all except latest
+    for (let i = 0; i < this.cubeParts.length - 1; i++) {
+      const cubePart = this.cubeParts[i];
+      cubeParts.push(cubePart.clone());
+    }
+
+    return new Cube({cubeParts});
+  }
+
   isFreeVec(vec) {
-    return !this.pointSet.has(vec.toString());
+    return !this.pointSet.has(vec.hash());
   }
 
   tryAddCubePart(cubePart) {
@@ -33,7 +44,7 @@ class Cube {
       return false;
 
     for (const point of cubePart.points) {
-      if (this.pointSet.has(point.toString()))
+      if (this.pointSet.has(point.hash()))
         return false;
     }
 
@@ -89,6 +100,10 @@ class Cube {
     const arr = [...this.pointSet];
     arr.sort();
     return '' + arr;
+  }
+
+  numCubeParts() {
+    return this.cubeParts.length;
   }
 
   draw(scene) {

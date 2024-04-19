@@ -54,14 +54,8 @@ const angleDelta = 0.01;
 scene.translateX(-2);
 scene.translateZ(-2);
 
-function animate() {
-  // requestAnimationFrame(animate);
+function drawScene() {
   scene.clear();
-
-  findSolution(doSingleStep);
-  if (typeof doSingleStep === "boolean")
-    doSingleStep = false;
-
   drawActNode(scene);
 
   // Move Camera
@@ -75,8 +69,34 @@ function animate() {
   camera.lookAt(0, 2, 0);
 
   renderer.render(scene, camera);
+}
+
+function animate() {
+  // requestAnimationFrame(animate);
+
+  findSolution(doSingleStep);
+  if (typeof doSingleStep === "boolean")
+    doSingleStep = false;
+  drawScene();
 
   requestAnimationFrame(animate);
 }
 
-animate();
+// animate();
+
+let c = 0;
+
+const iteration = () => {
+  for (let i = 0; i < 100; i++) {
+    if (findSolution())
+      return;
+  }
+  c++;
+  // if (c % 10 === 0) {
+  // out("drawScene");
+  setTimeout(drawScene, 0);
+  // }
+  setTimeout(iteration, 0);
+}
+
+iteration();

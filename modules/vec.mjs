@@ -94,7 +94,7 @@ class Vec {
     compareVal = this.x - other.x;
     if (compareVal !== 0)
       return compareVal;
-    
+
     compareVal = this.y - other.y;
     if (compareVal !== 0)
       return compareVal;
@@ -106,6 +106,12 @@ class Vec {
   toString() {
     return `[${this.x},${this.y},${this.z}]`;
   }
+
+  hash() {
+    // possible, because we only have 5 in each dimension
+    return `${this.x}${this.y}${this.z}`;
+  }
+
 
   static of(x, y, z) {
     return new Vec(x, y, z);

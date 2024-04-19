@@ -11,7 +11,7 @@ class CubePart {
     this.color = color || randColor();
 
     for (const point of points) {
-      this.pointSet.add(point.toString());
+      this.pointSet.add(point.hash());
     }
   }
 
@@ -91,13 +91,13 @@ class CubePart {
     this.pointSet.clear();
     for (const point of this.points) {
       point.add(vec);
-      this.pointSet.add(point.toString());
+      this.pointSet.add(point.hash());
     }
     return this;
   }
 
   containsVec(point) {
-    return this.pointSet.has(point.toString());
+    return this.pointSet.has(point.hash());
   }
 
   containedIn(min, max) {
