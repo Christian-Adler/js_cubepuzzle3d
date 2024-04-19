@@ -2,7 +2,7 @@ import {Cube} from "./cube.mjs";
 import {Vec} from "./vec.mjs";
 import {CubePart} from "./cubepart.mjs";
 import {out} from "./util.mjs";
-import {Linkedlist} from "./linkedlist.mjs";
+import {LinkedList} from "./linkedlist.mjs";
 import {Hashes} from "./Hashes.mjs";
 
 const alreadyVisited = new Hashes();
@@ -11,7 +11,7 @@ let startCube = new Cube({});
 alreadyVisited.add(startCube.numCubeParts(), startCube.hash());
 
 let count = 0;
-let workList = new Linkedlist();
+let workList = new LinkedList();
 workList.addOnHead(startCube);
 let actDrawCube = null;
 

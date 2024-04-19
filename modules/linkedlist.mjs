@@ -1,4 +1,4 @@
-class Linkedlist {
+class LinkedList {
   constructor() {
     this.head = null;
     this.tail = null;
@@ -69,4 +69,4 @@ class ListItem {
   }
 }
 
-export {Linkedlist};
+export {LinkedList};
