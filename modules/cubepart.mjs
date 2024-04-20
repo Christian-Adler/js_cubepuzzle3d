@@ -87,20 +87,20 @@ class CubePart {
     const sDir = num % 4;
     if (dir === 0) { // +x
       mainDir = Vec.normX();
-      secondDir = sDir % 2 === 0 ? Vec.normZ() : Vec.normY();
+      secondDir = sDir < 2 ? Vec.normZ() : Vec.normY();
     }
     else if (dir === 1) {  // +z
       mainDir = Vec.normZ();
-      secondDir = sDir % 2 === 0 ? Vec.normX() : Vec.normY();
+      secondDir = sDir < 2 ? Vec.normX() : Vec.normY();
     }
     else if (dir === 2 || dir === 3) { // +y || +y flat
       mainDir = Vec.normY();
-      secondDir = sDir % 2 === 0 ? Vec.normX() : Vec.normZ();
+      secondDir = sDir < 2 ? Vec.normX() : Vec.normZ();
     }
     else
       throw new Error('invalid dir: ' + dir);
 
-    if (sDir >= 2)
+    if (sDir % 2 !== 0)
       secondDir.invert();
 
     if (dir <= 2)
