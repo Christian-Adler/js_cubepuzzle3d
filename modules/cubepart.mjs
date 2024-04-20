@@ -78,6 +78,45 @@ class CubePart {
     return cubeParts;
   }
 
+  static createCubePartAt(vec, num) {
+    let cubePart;
+    let mainDir, secondDir;
+
+    const near = num % 8 >= 4;
+    const dir = Math.floor(num / 8);
+    const sDir = num % 4;
+    if (dir === 0) { // +x
+      mainDir = Vec.normX();
+      secondDir = sDir % 2 === 0 ? Vec.normZ() : Vec.normY();
+    } else if (dir === 1) {  // +z
+      mainDir = Vec.normZ();
+      secondDir = sDir % 2 === 0 ? Vec.normX() : Vec.normY();
+    } else if (dir === 2 || dir === 3) { // +y || +y flat
+      mainDir = Vec.normY();
+      secondDir = sDir % 2 === 0 ? Vec.normX() : Vec.normZ();
+    } else
+      throw new Error("invalid dir: " + dir);
+
+    if (sDir >= 2)
+      secondDir.invert();
+
+    if (dir <= 2)
+      cubePart = CubePart.ofNormVecs(mainDir, secondDir, near).move(vec);
+    else {
+      const points = [
+        Vec.nullVec(),
+        Vec.nullVec().addToNew(mainDir),
+        Vec.nullVec().addToNew(mainDir).addToNew(secondDir),
+        Vec.nullVec().addToNew(mainDir).addToNew(secondDir).addToNew(secondDir),
+        Vec.nullVec().addToNew(mainDir).addToNew(secondDir.clone().invert()),
+      ];
+
+      cubePart = (new CubePart(points)).move(vec);
+    }
+
+    return cubePart;
+  }
+
   clone() {
     const points = [];
     for (const point of this.points) {

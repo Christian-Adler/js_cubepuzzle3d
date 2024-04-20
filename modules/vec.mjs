@@ -87,19 +87,19 @@ class Vec {
   }
 
   compareTo(other) {
-    let compareVal = this.length() - other.length();
-    if (compareVal !== 0)
-      return compareVal;
+    // let compareVal = this.length() - other.length();
+    // if (compareVal !== 0)
+    //   return compareVal;
 
-    compareVal = this.x - other.x;
-    if (compareVal !== 0)
-      return compareVal;
+    let compareVal = 0;
 
-    compareVal = this.y - other.y;
-    if (compareVal !== 0)
-      return compareVal;
+    if (compareVal === 0)
+      compareVal = this.y - other.y;
+    if (compareVal === 0)
+      compareVal = this.z - other.z;
+    if (compareVal === 0)
+      compareVal = this.x - other.x;
 
-    compareVal = this.z - other.z;
     return compareVal;
   }
 

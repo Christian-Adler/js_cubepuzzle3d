@@ -8,6 +8,11 @@ const out = (val) => {
   console.log(val);
 }
 
+const txtOutDiv = document.getElementById('txtOut');
+const txtOut = (val) => {
+  txtOutDiv.innerText = val;
+}
+
 function shuffle(array) {
   let currentIndex = array.length;
 
@@ -24,4 +29,4 @@ function shuffle(array) {
   }
 }
 
-export {areSetsEqual, randColor, out, shuffle};
+export {areSetsEqual, randColor, out, txtOut, shuffle};

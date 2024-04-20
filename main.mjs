@@ -1,7 +1,8 @@
-import {drawActNode, findSolution} from "./modules/findsolution.mjs";
-
 import * as THREE from './modules/three.module.js';
-
+import {CubePart} from "./modules/cubepart.mjs";
+import {Cube} from "./modules/cube.mjs";
+import {Vec} from "./modules/vec.mjs";
+import {drawActNode, findSolution} from "./modules/findsolution.mjs";
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color().setHSL(0.6, 0, 0.1);
@@ -54,49 +55,77 @@ const angleDelta = 0.01;
 scene.translateX(-2);
 scene.translateZ(-2);
 
-function drawScene() {
-  scene.clear();
-  drawActNode(scene);
+if (true) {
+  function drawScene() {
+    scene.clear();
+    drawActNode(scene);
 
-  // Move Camera
-  angle += angleDelta;
-  if (angle > Math.PI * 2)
-    angle = 0;
-  // camera.position.z += 0.001;
-  camera.position.z = cameraRadius * Math.sin(angle);
-  camera.position.x = cameraRadius * Math.cos(angle);
-  // camera.position.y = cameraRadius * Math.cos(angle);
-  camera.lookAt(0, 2, 0);
+    // Move Camera
+    angle += angleDelta;
+    if (angle > Math.PI * 2)
+      angle = 0;
+    // camera.position.z += 0.001;
+    camera.position.z = cameraRadius * Math.sin(angle);
+    camera.position.x = cameraRadius * Math.cos(angle);
+    // camera.position.y = cameraRadius * Math.cos(angle);
+    camera.lookAt(0, 2, 0);
 
-  renderer.render(scene, camera);
-}
-
-function animate() {
-  // requestAnimationFrame(animate);
-
-  findSolution(doSingleStep);
-  if (typeof doSingleStep === "boolean")
-    doSingleStep = false;
-  drawScene();
-
-  requestAnimationFrame(animate);
-}
-
-// animate();
-
-let c = 0;
-
-const iteration = () => {
-  for (let i = 0; i < 100; i++) {
-    if (findSolution())
-      return;
+    renderer.render(scene, camera);
   }
-  c++;
-  // if (c % 10 === 0) {
-  // out("drawScene");
-  setTimeout(drawScene, 0);
-  // }
-  setTimeout(iteration, 0);
+
+  function animate() {
+    // requestAnimationFrame(animate);
+
+    if (typeof doSingleStep === "boolean") {
+      findSolution(doSingleStep);
+      doSingleStep = false;
+    } else {
+      for (let i = 0; i < 1000; i++) {
+        findSolution(null);
+      }
+    }
+    drawScene();
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 }
 
-iteration();
+// // test sort nach y z x
+// const points = [Vec.of(0, 0, 0), Vec.of(0, 0, 1), Vec.of(1, 0, 0), Vec.of(0, 1, 0), Vec.of(1, 1, 1)];
+// points.sort(function (a, b) {
+//   return a.compareTo(b);
+// });
+// out(points);
+
+if (false) {
+  let counter = -1;
+
+  function drawScene2() {
+    scene.clear();
+
+    let cube = new Cube({});
+    // cube.tryAddCubePart(CubePart.createCubePartAt(Vec.nullVec(), counter));
+    cube.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 1), counter));
+
+    cube.draw(scene);
+
+    renderer.render(scene, camera);
+  }
+
+  function animate2() {
+    // requestAnimationFrame(animate);
+
+    if (doSingleStep) {
+      counter++;
+      if (counter >= 28) counter = 0;
+    }
+    doSingleStep = false;
+    drawScene2();
+
+    requestAnimationFrame(animate2);
+  }
+
+  animate2();
+}
