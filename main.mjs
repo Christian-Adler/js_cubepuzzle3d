@@ -1,8 +1,8 @@
 import * as THREE from './modules/three.module.js';
-import {CubePart} from "./modules/cubepart.mjs";
-import {Cube} from "./modules/cube.mjs";
-import {Vec} from "./modules/vec.mjs";
-import {drawActNode, findSolution} from "./modules/findsolution.mjs";
+import { CubePart } from './modules/cubepart.mjs';
+import { Cube } from './modules/cube.mjs';
+import { Vec } from './modules/vec.mjs';
+import { drawActNode, findSolution } from './modules/findsolution.mjs';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color().setHSL(0.6, 0, 0.1);
@@ -16,12 +16,12 @@ renderer.shadowMap.enabled = true;
 
 document.body.appendChild(renderer.domElement);
 
-window.addEventListener('resize', onWindowResize, false)
+window.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 // SingleStep??
@@ -50,11 +50,13 @@ const cameraRadius = 10;
 camera.position.z = cameraRadius;
 camera.position.y = cameraRadius / 2;
 let angle = 0;
-const angleDelta = 0.01;
+const angleDelta = -0.01;
 
 scene.translateX(-2);
 scene.translateZ(-2);
 
+if (false)
+  localStorage.removeItem('actState');
 if (true) {
   function drawScene() {
     scene.clear();
@@ -65,8 +67,8 @@ if (true) {
     if (angle > Math.PI * 2)
       angle = 0;
     // camera.position.z += 0.001;
-    camera.position.z = cameraRadius * Math.sin(angle);
-    camera.position.x = cameraRadius * Math.cos(angle);
+    camera.position.z = cameraRadius * Math.cos(angle);
+    camera.position.x = cameraRadius * Math.sin(angle);
     // camera.position.y = cameraRadius * Math.cos(angle);
     camera.lookAt(0, 2, 0);
 
@@ -76,10 +78,11 @@ if (true) {
   function animate() {
     // requestAnimationFrame(animate);
 
-    if (typeof doSingleStep === "boolean") {
+    if (typeof doSingleStep === 'boolean') {
       findSolution(doSingleStep);
       doSingleStep = false;
-    } else {
+    }
+    else {
       for (let i = 0; i < 1000; i++) {
         findSolution(null);
       }
@@ -129,3 +132,21 @@ if (false) {
 
   animate2();
 }
+
+// const cube = new Cube({});
+// cube.tryAddCubePart(CubePart.createCubePartAt(Vec.nullVec(), 0));
+// cube.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 1), 0));
+//
+// const cube3 = new Cube({});
+// cube3.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 3), 0));
+// cube3.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 1), 0));
+//
+// const workList = new LinkedList();
+// workList.addOnHead(new WorkListItem(cube, Vec.normX(), 0));
+// workList.addOnTail(new WorkListItem(cube3, Vec.normZ(), 1));
+//
+// const json = workList.toObject();
+//
+// const wl = LinkedList.fromObject(json);
+// console.log(wl);
+// localStorage.removeItem('actState');
