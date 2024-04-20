@@ -107,10 +107,11 @@ class Cube {
 
   draw(scene) {
     let c = 0;
-    const drawStrikingUpTo = this.cubeParts.length / 3;
+    const drawSolidUpTo = -1; // 5;
+    const drawStrikingUpTo = this.cubeParts.length; // / 3;
     for (const cubePart of this.cubeParts) {
       c++;
-      cubePart.draw(scene, c <= 5, c <= drawStrikingUpTo);
+      cubePart.draw(scene, c <= drawSolidUpTo, c <= drawStrikingUpTo);
     }
   }
 

@@ -64,6 +64,7 @@ function calcNextStep() {
     if (cube.isFilled()) {
       txtOut('Found solution');
       solutions.push(cube);
+      out(actDrawCube);
       workList.clear();
       out('return');
     }
@@ -119,8 +120,6 @@ const findSolution = (doSingleStep) => {
 
   if (solutions.length > 0) {
     // out(solutions);
-    actDrawCube = solutions[0];
-    out(actDrawCube);
     return true;
   }
   return false;
