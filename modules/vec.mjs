@@ -39,7 +39,7 @@ class Vec {
     this.x *= val;
     this.y *= val;
     this.z *= val;
-    return this
+    return this;
   }
 
   multToNew(val) {
@@ -48,20 +48,20 @@ class Vec {
 
   containedIn(min, max) {
     return this.x >= min && this.x <= max
-        && this.y >= min && this.y <= max
-        && this.z >= min && this.z <= max;
+      && this.y >= min && this.y <= max
+      && this.z >= min && this.z <= max;
   }
 
   isCorner(min, max) {
     return (this.x === min || this.x === max)
-        && (this.y === min || this.y === max)
-        && (this.z === min || this.z === max);
+      && (this.y === min || this.y === max)
+      && (this.z === min || this.z === max);
   }
 
   isOnEdge(min, max) {
     return ((this.x === min || this.x === max) && (this.y === min || this.y === max)) ||
-        ((this.x === min || this.x === max) && (this.z === min || this.z === max)) ||
-        ((this.z === min || this.z === max) && (this.y === min || this.y === max));
+      ((this.x === min || this.x === max) && (this.z === min || this.z === max)) ||
+      ((this.z === min || this.z === max) && (this.y === min || this.y === max));
   }
 
   invert() {
@@ -107,11 +107,18 @@ class Vec {
     return `[${this.x},${this.y},${this.z}]`;
   }
 
+  toObject() {
+    return { x: this.x, y: this.y, z: this.z };
+  }
+
+  static fromObject(obj) {
+    return Vec.of(obj.x, obj.y, obj.z);
+  }
+
   hash() {
     // possible, because we only have 5 in each dimension
     return `${this.x}${this.y}${this.z}`;
   }
-
 
   static of(x, y, z) {
     return new Vec(x, y, z);
@@ -134,4 +141,4 @@ class Vec {
   }
 }
 
-export {Vec};
+export { Vec };

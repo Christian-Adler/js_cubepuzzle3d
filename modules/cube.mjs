@@ -1,12 +1,12 @@
-import {areSetsEqual} from "./util.mjs";
-import {CubePart} from "./cubepart.mjs";
+import { areSetsEqual } from './util.mjs';
+import { CubePart } from './cubepart.mjs';
 
 class Cube {
   static min = 0;
   static max = 4;
   static filledPartsNum = Math.pow((Cube.max + 1 - Cube.min), 3) / CubePart.CUBE_PART_SIZE;
 
-  constructor({cubeParts = []}) {
+  constructor({ cubeParts = [] }) {
     this.cubeParts = cubeParts;
     this.pointSet = new Set();
     for (const cubePart of cubeParts) {
@@ -21,7 +21,7 @@ class Cube {
     for (const cubePart of this.cubeParts) {
       cubeParts.push(cubePart.clone());
     }
-    return new Cube({cubeParts});
+    return new Cube({ cubeParts });
   }
 
   getPrevCube() {
@@ -32,7 +32,7 @@ class Cube {
       cubeParts.push(cubePart.clone());
     }
 
-    return new Cube({cubeParts});
+    return new Cube({ cubeParts });
   }
 
   isFreeVec(vec) {
@@ -53,7 +53,7 @@ class Cube {
       this.pointSet.add(pointSetElement);
     }
 
-    return true
+    return true;
   }
 
   envelope() {
@@ -78,7 +78,6 @@ class Cube {
   static containedInCubeCubePart(cubePart) {
     return cubePart.containedIn(Cube.min, Cube.max);
   }
-
 
   isFilled() {
     return this.cubeParts.length === Cube.filledPartsNum;
@@ -108,12 +107,20 @@ class Cube {
 
   draw(scene) {
     let c = 0;
-    const drawSolidUpTo = this.cubeParts.length / 3;
+    const drawStrikingUpTo = this.cubeParts.length / 3;
     for (const cubePart of this.cubeParts) {
       c++;
-      cubePart.draw(scene, c <= 5, c <= drawSolidUpTo);
+      cubePart.draw(scene, c <= 5, c <= drawStrikingUpTo);
     }
+  }
+
+  toObject() {
+    return { cubeParts: this.cubeParts.map(p => p.toObject()) };
+  }
+
+  static fromObject(obj) {
+    return new Cube({ cubeParts: obj.cubeParts.map(p => CubePart.fromObject(p)) });
   }
 }
 
-export {Cube};
+export { Cube };

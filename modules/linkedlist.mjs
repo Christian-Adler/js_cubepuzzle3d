@@ -1,3 +1,5 @@
+import { WorkListItem } from './workListItem.mjs';
+
 class LinkedList {
   constructor() {
     this.head = null;
@@ -56,6 +58,24 @@ class LinkedList {
   length() {
     return this.size;
   }
+
+  toObject() {
+    const list = [];
+    let act = this.head;
+    while (act) {
+      list.push(act.val.toObject());
+      act = act.next;
+    }
+    return list;
+  }
+
+  static fromObject(list) {
+    const workList = new LinkedList();
+    for (const listElement of list) {
+      workList.addOnTail(WorkListItem.fromObject(listElement));
+    }
+    return workList;
+  }
 }
 
 class ListItem {
@@ -69,4 +89,4 @@ class ListItem {
   }
 }
 
-export {LinkedList};
+export { LinkedList };

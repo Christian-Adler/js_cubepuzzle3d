@@ -1,6 +1,6 @@
-import {Vec} from './vec.mjs';
-import {randColor} from "./util.mjs";
-import * as THREE from "./three.module.js";
+import { Vec } from './vec.mjs';
+import { randColor } from './util.mjs';
+import * as THREE from './three.module.js';
 
 class CubePart {
   static CUBE_PART_SIZE = 5;
@@ -25,7 +25,7 @@ class CubePart {
       wireframe: !solid,
       transparent: true,
       opacity: striking ? 0.8 : 0.5
-    })
+    });
 // const material = new THREE.MeshNormalMaterial({wireframe: true});
 
     const threeCubes = [];
@@ -82,20 +82,23 @@ class CubePart {
     let cubePart;
     let mainDir, secondDir;
 
-    const near = num % 8 >= 4;
+    const near = num % 8 < 4;
     const dir = Math.floor(num / 8);
     const sDir = num % 4;
     if (dir === 0) { // +x
       mainDir = Vec.normX();
       secondDir = sDir % 2 === 0 ? Vec.normZ() : Vec.normY();
-    } else if (dir === 1) {  // +z
+    }
+    else if (dir === 1) {  // +z
       mainDir = Vec.normZ();
       secondDir = sDir % 2 === 0 ? Vec.normX() : Vec.normY();
-    } else if (dir === 2 || dir === 3) { // +y || +y flat
+    }
+    else if (dir === 2 || dir === 3) { // +y || +y flat
       mainDir = Vec.normY();
       secondDir = sDir % 2 === 0 ? Vec.normX() : Vec.normZ();
-    } else
-      throw new Error("invalid dir: " + dir);
+    }
+    else
+      throw new Error('invalid dir: ' + dir);
 
     if (sDir >= 2)
       secondDir.invert();
@@ -173,6 +176,14 @@ class CubePart {
       scene.add(threeCube);
     }
   }
+
+  toObject() {
+    return { color: this.color, points: this.points.map(p => p.toObject()) };
+  }
+
+  static fromObject(obj) {
+    return new CubePart(obj.points.map(p => Vec.fromObject(p)), obj.color);
+  }
 }
 
-export {CubePart};
+export { CubePart };
