@@ -1,8 +1,11 @@
 import * as THREE from './modules/three.module.js';
-import { CubePart } from './modules/cubepart.mjs';
-import { Cube } from './modules/cube.mjs';
-import { Vec } from './modules/vec.mjs';
-import { drawActNode, findSolution } from './modules/findsolution.mjs';
+import {CubePart} from './modules/cubepart.mjs';
+import {Cube} from './modules/cube.mjs';
+import {Vec} from './modules/vec.mjs';
+import {drawActNode, findSolution} from './modules/findsolution.mjs';
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color().setHSL(0.6, 0, 0.1);
@@ -24,11 +27,9 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+
 // SingleStep??
 let doSingleStep = null;
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-
 if (urlParams.has('singleStep')) {
   doSingleStep = true;
   window.addEventListener('click', () => {
@@ -36,15 +37,17 @@ if (urlParams.has('singleStep')) {
   }, false);
 }
 
-// const geometry = new THREE.BoxGeometry(4, 1, 1);
-// // const material = new THREE.MeshBasicMaterial({color: 0x049ef4, wireframe: false, fog: true});
-// // const material = new THREE.MeshStandardMaterial({color: 0x049ef4, wireframe: false, fog: true});
-// const material = new THREE.MeshBasicMaterial({color: randColor(), wireframe: true, transparent: true, opacity: 0.5})
-// // const material = new THREE.MeshNormalMaterial({wireframe: true});
-// const cube = new THREE.Mesh(geometry, material);
-// cube.position.z += 1;
-// scene.add(cube);
-// scene.add(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material));
+// highlight cube part
+let highLightPart = 0;
+window.addEventListener('keydown', (evt) => {
+  if (evt.key === 'ArrowUp') {
+    highLightPart++;
+    if (highLightPart > 26) highLightPart = 26;
+  } else if (evt.key === 'ArrowDown') {
+    highLightPart--;
+    if (highLightPart < 0) highLightPart = 0;
+  }
+}, false);
 
 const cameraRadius = 10;
 camera.position.z = cameraRadius;
@@ -58,9 +61,23 @@ scene.translateZ(-2);
 if (false)
   localStorage.removeItem('actState');
 if (true) {
-  function drawScene() {
+  function drawScene(foundSolution) {
     scene.clear();
-    drawActNode(scene);
+
+    const drawConfig = {
+      drawSolidUpTo: 0,
+      opacity: 0.8,
+      dimension: 0.9,
+      color: null,
+      highlightPartNo: -1
+    };
+    if (foundSolution) {
+      drawConfig.drawSolidUpTo = 25;
+      drawConfig.dimension = 0.3;
+      drawConfig.highlightPartNo = highLightPart;
+    }
+
+    drawActNode(scene, drawConfig);
 
     // Move Camera
     angle += angleDelta;
@@ -76,31 +93,25 @@ if (true) {
   }
 
   function animate() {
-    // requestAnimationFrame(animate);
-
+    let foundSolution = false;
     if (typeof doSingleStep === 'boolean') {
       findSolution(doSingleStep);
-      doSingleStep = false;
-    }
-    else {
+      foundSolution = doSingleStep = false;
+    } else {
       for (let i = 0; i < 1000; i++) {
-        findSolution(null);
+        foundSolution = findSolution(null);
+        if (foundSolution)
+          break;
       }
     }
-    drawScene();
+
+    drawScene(foundSolution);
 
     requestAnimationFrame(animate);
   }
 
   animate();
 }
-
-// // test sort nach y z x
-// const points = [Vec.of(0, 0, 0), Vec.of(0, 0, 1), Vec.of(1, 0, 0), Vec.of(0, 1, 0), Vec.of(1, 1, 1)];
-// points.sort(function (a, b) {
-//   return a.compareTo(b);
-// });
-// out(points);
 
 if (false) {
   let counter = -1;
@@ -132,21 +143,3 @@ if (false) {
 
   animate2();
 }
-
-// const cube = new Cube({});
-// cube.tryAddCubePart(CubePart.createCubePartAt(Vec.nullVec(), 0));
-// cube.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 1), 0));
-//
-// const cube3 = new Cube({});
-// cube3.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 3), 0));
-// cube3.tryAddCubePart(CubePart.createCubePartAt(Vec.of(1, 1, 1), 0));
-//
-// const workList = new LinkedList();
-// workList.addOnHead(new WorkListItem(cube, Vec.normX(), 0));
-// workList.addOnTail(new WorkListItem(cube3, Vec.normZ(), 1));
-//
-// const json = workList.toObject();
-//
-// const wl = LinkedList.fromObject(json);
-// console.log(wl);
-// localStorage.removeItem('actState');

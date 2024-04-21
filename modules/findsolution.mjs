@@ -1,9 +1,9 @@
-import { Cube } from './cube.mjs';
-import { Vec } from './vec.mjs';
-import { CubePart } from './cubepart.mjs';
-import { msToHMS, out, txtOut } from './util.mjs';
-import { LinkedList } from './linkedlist.mjs';
-import { WorkListItem } from './workListItem.mjs';
+import {Cube} from './cube.mjs';
+import {Vec} from './vec.mjs';
+import {CubePart} from './cubepart.mjs';
+import {msToHMS, out, txtOut} from './util.mjs';
+import {LinkedList} from './linkedlist.mjs';
+import {WorkListItem} from './workListItem.mjs';
 
 // const alreadyVisited = new Hashes();
 const solutions = [];
@@ -34,8 +34,7 @@ if (stored) {
   foundHolesCount = storedObj.foundHolesCount;
   workList = LinkedList.fromObject(storedObj.workList);
   txtOut('From Strore...');
-}
-else {
+} else {
   workList.addOnHead(new WorkListItem(startCube, Vec.nullVec(), 0));
   txtOut('From Start...');
 }
@@ -66,9 +65,7 @@ function calcNextStep() {
       solutions.push(cube);
       out(actDrawCube);
       workList.clear();
-      out('return');
-    }
-    else {
+    } else {
       const checkPoints = cube.envelope();
 
       // sort points?
@@ -107,8 +104,7 @@ function calcNextStep() {
       const nextVec = checkPoints[0];
       workList.addOnHead(new WorkListItem(cube, nextVec, 0));
     }
-  }
-  else
+  } else
     calcNextStep();
 }
 
@@ -125,9 +121,9 @@ const findSolution = (doSingleStep) => {
   return false;
 };
 
-const drawActNode = (scene) => {
+const drawActNode = (scene, config) => {
   if (actDrawCube)
-    actDrawCube.draw(scene);
+    actDrawCube.draw(scene, config);
 };
 
-export { findSolution, drawActNode };
+export {findSolution, drawActNode};

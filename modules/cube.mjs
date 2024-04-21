@@ -1,12 +1,12 @@
-import { areSetsEqual } from './util.mjs';
-import { CubePart } from './cubepart.mjs';
+import {areSetsEqual} from './util.mjs';
+import {CubePart} from './cubepart.mjs';
 
 class Cube {
   static min = 0;
   static max = 4;
   static filledPartsNum = Math.pow((Cube.max + 1 - Cube.min), 3) / CubePart.CUBE_PART_SIZE;
 
-  constructor({ cubeParts = [] }) {
+  constructor({cubeParts = []}) {
     this.cubeParts = cubeParts;
     this.pointSet = new Set();
     for (const cubePart of cubeParts) {
@@ -21,7 +21,7 @@ class Cube {
     for (const cubePart of this.cubeParts) {
       cubeParts.push(cubePart.clone());
     }
-    return new Cube({ cubeParts });
+    return new Cube({cubeParts});
   }
 
   getPrevCube() {
@@ -32,7 +32,7 @@ class Cube {
       cubeParts.push(cubePart.clone());
     }
 
-    return new Cube({ cubeParts });
+    return new Cube({cubeParts});
   }
 
   isFreeVec(vec) {
@@ -105,23 +105,27 @@ class Cube {
     return this.cubeParts.length;
   }
 
-  draw(scene) {
+  draw(scene, {drawSolidUpTo, opacity = 0.8, dimension = 0.9, color = null, highlightPartNo = -1}) {
     let c = 0;
-    const drawSolidUpTo = -1; // 5;
-    const drawStrikingUpTo = this.cubeParts.length; // / 3;
     for (const cubePart of this.cubeParts) {
       c++;
-      cubePart.draw(scene, c <= drawSolidUpTo, c <= drawStrikingUpTo);
+      if (highlightPartNo >= c) {
+        if (highlightPartNo === c)
+          cubePart.draw(scene, {solid: true, opacity: 0.9, dimension: 1, color: 0xffffff});
+        else
+          cubePart.draw(scene, {solid: false, opacity: 0.9, dimension: 0.9, color});
+      } else
+        cubePart.draw(scene, {solid: c <= drawSolidUpTo, opacity, dimension, color});
     }
   }
 
   toObject() {
-    return { cubeParts: this.cubeParts.map(p => p.toObject()) };
+    return {cubeParts: this.cubeParts.map(p => p.toObject())};
   }
 
   static fromObject(obj) {
-    return new Cube({ cubeParts: obj.cubeParts.map(p => CubePart.fromObject(p)) });
+    return new Cube({cubeParts: obj.cubeParts.map(p => CubePart.fromObject(p))});
   }
 }
 
-export { Cube };
+export {Cube};

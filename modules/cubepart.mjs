@@ -1,5 +1,5 @@
-import { Vec } from './vec.mjs';
-import { randColor } from './util.mjs';
+import {Vec} from './vec.mjs';
+import {randColor} from './util.mjs';
 import * as THREE from './three.module.js';
 
 class CubePart {
@@ -15,16 +15,15 @@ class CubePart {
     }
   }
 
-  getThree(solid, striking) {
-    const dimension = 0.9;
+  getThree({solid, opacity = 0.8, dimension = 0.9, color = null}) {
     const geometry = new THREE.BoxGeometry(dimension, dimension, dimension);
 // const material = new THREE.MeshBasicMaterial({color: 0x049ef4, wireframe: false, fog: true});
 // const material = new THREE.MeshStandardMaterial({color: 0x049ef4, wireframe: false, fog: true});
     const material = new THREE.MeshBasicMaterial({
-      color: this.color,
+      color: color || this.color,
       wireframe: !solid,
       transparent: true,
-      opacity: striking ? 0.8 : 0.5
+      opacity
     });
 // const material = new THREE.MeshNormalMaterial({wireframe: true});
 
@@ -88,16 +87,13 @@ class CubePart {
     if (dir === 0) { // +x
       mainDir = Vec.normX();
       secondDir = sDir < 2 ? Vec.normZ() : Vec.normY();
-    }
-    else if (dir === 1) {  // +z
+    } else if (dir === 1) {  // +z
       mainDir = Vec.normZ();
       secondDir = sDir < 2 ? Vec.normX() : Vec.normY();
-    }
-    else if (dir === 2 || dir === 3) { // +y || +y flat
+    } else if (dir === 2 || dir === 3) { // +y || +y flat
       mainDir = Vec.normY();
       secondDir = sDir < 2 ? Vec.normX() : Vec.normZ();
-    }
-    else
+    } else
       throw new Error('invalid dir: ' + dir);
 
     if (sDir % 2 !== 0)
@@ -171,14 +167,14 @@ class CubePart {
     return `{${this.points}}`;
   }
 
-  draw(scene, drawSolid, drawStriking) {
-    for (const threeCube of this.getThree(drawSolid, drawStriking)) {
+  draw(scene, config) {
+    for (const threeCube of this.getThree(config)) {
       scene.add(threeCube);
     }
   }
 
   toObject() {
-    return { color: this.color, points: this.points.map(p => p.toObject()) };
+    return {color: this.color, points: this.points.map(p => p.toObject())};
   }
 
   static fromObject(obj) {
@@ -186,4 +182,4 @@ class CubePart {
   }
 }
 
-export { CubePart };
+export {CubePart};
